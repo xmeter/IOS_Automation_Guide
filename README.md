@@ -33,7 +33,7 @@ IOS自动化指南
 源码项目一般是以.xcodeproj结尾的，这时候我们可以双击这个项目，打开它。然后我们就可以看到Xcode的界面了。
 ![xcode主界面](https://geekpics.net/images/2015/06/17/YdWAq0O3.jpg)
 
-在Xcode的界面里，我们需要设置以下位置的东西，这样我们就指定了被测程序以及被测程序运行的模拟器。
+在Xcode的界面里，我们需要设置以下位置（也就是scheme）的东西，这样我们就指定了被测程序以及被测程序运行的模拟器。
 ![设置scheme](https://geekpics.net/images/2015/06/17/cYrTDi.jpg)
 
 启动Instruments（Product>Profile）或者command + I。
@@ -43,4 +43,22 @@ IOS自动化指南
 ![弹出窗](https://geekpics.net/images/2015/06/17/MwlN6au7.jpg)
 
 Instruments打开以后，我们就可以在以下区域写脚本了。
+![instruments主窗口](https://geekpics.net/images/2015/06/17/CHvG.jpg)
+
+###在真机上###
+在真机上又分为两种情况：
+
+1. 有源码
+2. 无源码
+
+**有源码**的情况基本跟在模拟器上跑一样，我们需要先把真机用USB连接起来，然后在真机的setting>developer option>enable uiautomation 勾选上。然后我们设置scheme为UIADemo>IOS Device。
+![设置scheme](https://geekpics.net/images/2015/06/18/3Dhbrt7.jpg)
+然后我们要保证我们的APP是用开发者账户编译的，因为我没有开发者账号，所以就不细讲这点了。
+后面的步骤就可以参考在模拟器上运行的步骤。
+
+**无源码**的情况则有一定的区别了，这个时候咱们只有一个.ipa文件，那么首先，我们可以借助各种助手类工具（比如ITools）把这个APP先安装到我们的设备上，然后打开Xcode>open developer tool>Instruments
+![打开instruments](https://geekpics.net/images/2015/06/18/MJhex4.jpg)
+然后就可以看到如下弹出窗口，在这个窗口里设置设备以及要运行的app，接着选中Automation这个template，点击确定。
+![选择template](https://geekpics.net/images/2015/06/18/s7J4O0.jpg)
+这样我们就进入到了instruments的主界面，然后就可以开始书写第一个程序了。
 ![instruments主窗口](https://geekpics.net/images/2015/06/17/CHvG.jpg)
