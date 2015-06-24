@@ -62,3 +62,22 @@ Instruments打开以后，我们就可以在以下区域写脚本了。
 ![选择template](https://geekpics.net/images/2015/06/18/s7J4O0.jpg)
 这样我们就进入到了instruments的主界面，然后就可以开始书写第一个程序了。
 ![instruments主窗口](https://geekpics.net/images/2015/06/17/CHvG.jpg)
+### 第一个UIA脚本的书写 ###
+完成了以上内容的设置以后，我们就可以正式开始书写脚本了，下面我们就来实现以下：
+
+    var target = UIATarget.localTarget();
+    tablet.logElementTree();
+以上的代码实现了打印出当前正在运行设备的所有元素的效果：
+![元素结构](https://geekpics.net/images/2015/06/24/jZGAYCuH.jpg)
+那么我们是怎么得到这个结果的呢？
+
+首先，我们在instruments的script界面里面写下前面的代码，然后点击左上角的"record"键运行我们的脚本。
+![运行脚本](https://geekpics.net/images/2015/06/24/4D6ofgFez.jpg)
+然后，在运行结束以后，我们要切换到trace log界面去，就能看到一开始我们看到的元素结构了。
+![tracelog 界面](https://geekpics.net/images/2015/06/24/viVN3J17kR.jpg)
+录制脚本
+-------
+实际上instruments还提供了录制功能，当我们点击下面的红色的录制按钮以后，我们对APP的操作就会被记录下来，然后当我们点击终止键以后，就会在script窗口生成相应的代码。
+
+![录制功能](https://geekpics.net/images/2015/06/24/7mazu5M.jpg)
+录制看起来是个很美好的功能，然而就跟大多数具有录制功能的工具一样，录制生成的脚本，很多都是根据坐标来操作的，那么当你换了设备或者是分辨率以后，整个脚本就基本没啥用处了，所以从我的角度来讲，是不推荐大家用录制功能的。
