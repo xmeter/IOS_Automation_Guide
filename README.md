@@ -81,3 +81,66 @@ Instruments打开以后，我们就可以在以下区域写脚本了。
 
 ![录制功能](https://geekpics.net/images/2015/06/24/7mazu5M.jpg)
 录制看起来是个很美好的功能，然而就跟大多数具有录制功能的工具一样，录制生成的脚本，很多都是根据坐标来操作的，那么当你换了设备或者是分辨率以后，整个脚本就基本没啥用处了，所以从我的角度来讲，是不推荐大家用录制功能的。
+元素定位
+-------
+对UI自动化来讲，最主要的问题就是定位元素，而对于UIA来说，跟所有的UI自动化工具一样，它只能跟可见的元素进行交互，你如果需要了解哪些元素是可以交互的，logElementTree()就是你的好帮手了。
+
+每个可访问的UI控件都是由一个Javascript对象来代表的。UI控件一般含有几个属性： name, value, elements, parent.整个窗口包含了很多空间，构成了一个层级结构（hierarchy）。于是在UIA当中，所有的元素都是分层的，要访问某个元素，我们就必须从最顶层开始寻找。
+
+- UIATarget 是最上层元素，代表着被测系统的最高等级的用户界面元素，可以是真机，也可以是模拟器上的IOS系统。
+
+- frontMostApp 是UIATaget的下面一层，代表着当前显示在最前的App, 我们可以粗略的认为这就是我们的App。
+ 
+- mainWindow 是frontMostAPP的下面一层，代表着当前正在运行的App的主要界面，可以理解为我们所看到的最前面的窗口。
+
+如下图就是一个大概的结构示例：
+![UIhierarchy](https://geekpics.net/images/2015/06/25/6h5H3AZ.jpg)
+因为在UIA当中，我们的元素是一个javascript对象，所以我们可以通过以下几种方式来进行定位：
+
+- name 理论上每个元素都有一个name属性，所以我们可以通过name来定位元素。
+
+- index 对于同一类的元素来说，他们的name属性可能是相同的，我们就可以通过index来定位，在UIA当中，index是从0开始计算的，并且是从上往下数的。
+
+比如这个button元素：
+![button](https://geekpics.net/images/2015/06/25/e19bLHokj.jpg)
+我们可以用以下代码来找到它：
+
+    var target = UIATarget.localTarget();
+    //使用name定位
+    var button1 = target.frontMostApp().mainWindow().buttons()["Enter"];
+    //使用index定位
+    var button1 = target.frontMostApp().mainWindow().buttons()[0];
+    
+在进行定位的时候，所有的元素都需要**从最顶层来一层一层的找**。
+
+### 如何判断我们该用哪个tag来表示要寻找的元素？ ###
+通过前面那个图我们可以看出，任何一个元素在element tree里面都是以UIA开头，然后加上这个元素的Tag，比如Button，StaticText等等。那么当我们在代码里面运用的时候，我们就需要剔除UIA这个开头，然后把tag的首字母小写，最后在tag末尾加上一个复数的代表s，因为在UI hierarchy当中，我们打印出来的各个元素理论上都不止一个，我们得到的元素更像是存在一个list里面。一般来讲，这样我们就可以正确在代码里面写出我们需要的元素的tag了，当然凡事也有例外，想要了解更多的元素tag的知识，请点击[这里](https://developer.apple.com/library/ios/documentation/ToolsLanguages/Reference/UIAElementClassReference/index.html#//apple_ref/doc/uid/TP40009903)。
+
+UIA的API解析
+-----------
+对于UIA来讲，每个element都有一些公共的方法来对他们进行操作，下面我们就来一一解析一下。
+### 单击(tap) ###
+在UIA当中，单击是通过tap()这个方法来实现的，在我们定位到元素以后，便可以调用这个方法。
+
+    var button1 = target.frontMostApp().mainWindow().buttons();
+    button1.tap(); 
+
+### 双击(doubleTap) ###
+UIA当中，双击则是通过doubleTap()来实现的：
+
+    var button1 = target.frontMostApp().mainWindow().buttons();
+    button1.doubleTap();
+### 滚动(scrollToVisible) ###
+当一个元素不可见的时候，UIA是不能够操作它的，所以我们就可以用scrollToVisible()来在它的父容器当中滚动，一直到它可见为止，一般来讲这种元素都是在tableview或者webview里面。
+
+    var toptext = target.frontMostApp().mainWindow().staticTexts()["Second View"];
+    toptext.scrollToVisible();
+这个所谓的可见是指当前在你的荧幕上可见，但是如果我们在模拟器上运行，我们的显示器的分辨率可能会比我们的模拟器的分辨率小，这就导致了我们在模拟器上看到有滚动条，并且不一定能够看到我们所要的元素，然而实际上该元素是可见的，如果这个时候我们使用这个方法，就会报异常。
+
+### 两个手指点击(twoFingerTap) ###
+两个手指点击在IOS系统当中一般是展开一个菜单，类似windows的鼠标右键一样的功能，我们就使用twoFingerTap()这个方法来实现。
+
+    var toptext = target.frontMostApp().mainWindow().staticTexts()["Second View"];
+    toptext.twoFingerTap();
+
+
