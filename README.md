@@ -143,4 +143,53 @@ UIA当中，双击则是通过doubleTap()来实现的：
     var toptext = target.frontMostApp().mainWindow().staticTexts()["Second View"];
     toptext.twoFingerTap();
 
+###捏放(pinch)###
+捏放在IOS系统里面一般是来进行放大和缩小的，pinchopen是放大，pinchclose是缩小，分别使用pinchOpenFromToForDuration()和pinchCloseFromToForDuration()来实现。
+
+    UIATarget.localTarget().pinchOpenFromToForDuration({x:20, y:200},{x:300, y:200},2);
+    UIATarget.localTarget().pinchCloseFromToForDuration({x:20, y:200}, {x:300, y:200},2);   
+后面的参数分别为起始坐标，结束坐标，以及持续时间。
+
+###拖放###
+拖放在UIA里面是有两种实现方式，分别为dragFromToForDuration()和flickFromTo()。
+
+    UIATarget.localTarget().dragFromToForDuration({x:160, y:200},{x:160,y:400},1);
+    UIATarget.localTarget().flickFromTo({x:160, y:200},{x:160, y:400});
+dragFromToForDuration的最后一个参数为持续时间，而flickFromTo则没有这个持续时间，他跟真实的操作差不多，不需要一个持续时间，当你拖放完了，这个操作也就算结束了。
+
+###拿起来不放(touchAndHold)###
+按住并持续一段时间在UIA里面是用touchAndHold()来实现的。
+
+
+    UIATarget.localTarget().touchAndHold(2);
+这个参数代表的是持续的时间，单位是秒。
+###确认元素是否有效(checkIsValid)###
+当我们进行了一系列操作以后，可能会导致元素的状态发生改变，这时候就需要我们先检查一下这个元素是否还可用，我们就可以用checkIsValid()这个方法来实现，同时这个方法返回的是个布尔类型。
+
+###检查元素是否获得了键盘输入(hasKeyboardFocus)###
+当我们要检查一个元素里面是否有键盘输入的事件，我们就可以通过hasKeyboardFocus()来实现。这个方法返回的是一个数字，1代表存在，0代表不存在，null表示这个状态不可用，也就是说这个元素是没有这个状态的。
+
+###检查元素是否有效(isValid)###
+当我们要检查我们最后一次尝试访问的元素是否存在的时候，我们通过isValid()来实现。当要确定这个元素确实存在的时候，我们用checkIsValid()来替代这个方法。这个方法返回的是一个布尔类型。
+
+###检查元素是否可用(isEnable)###
+当元素加载时，会有一个过程，只有当元素enable以后，才可以进行交互，所以我们可以用isEnable()来判断。这个方法返回的也是数字，1代表可用，0代表不可用，null代表这个状态不可用。
+
+###检查元素是否可见(isVisible)###
+因为UIA只能与可见的元素交互，所以我们可以用isVisible()来确定元素是否可见。这个方法返回值也是数字，1代表可见，0代表不可见，null代表状态不可用。
+
+###等待元素失效(waitForInvalid)###
+有的时候我们需要等到某个元素失效才能进行下一步操作，我们就可以使用waitForInvalid()来实现。这个方法返回的是个布尔值。
+
+###获取元素的label属性###
+获取元素的label属性，我们使用label()这个方法。
+
+###获取元素的name属性###
+获取元素的name属性，我们使用label()这个方法。
+
+###获取元素的value属性###
+获取元素的name属性，我们使用value()这个方法。
+
+###查看一个元素的name是不是某个字段###
+要查看一个元素的name属性匹配了特定字符串，可以使用withName()这个方法，里面带参数name。
 
