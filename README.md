@@ -115,6 +115,15 @@ Instruments打开以后，我们就可以在以下区域写脚本了。
 
 ### 如何判断我们该用哪个tag来表示要寻找的元素？ ###
 通过前面那个图我们可以看出，任何一个元素在element tree里面都是以UIA开头，然后加上这个元素的Tag，比如Button，StaticText等等。那么当我们在代码里面运用的时候，我们就需要剔除UIA这个开头，然后把tag的首字母小写，最后在tag末尾加上一个复数的代表s，因为在UI hierarchy当中，我们打印出来的各个元素理论上都不止一个，我们得到的元素更像是存在一个list里面。一般来讲，这样我们就可以正确在代码里面写出我们需要的元素的tag了，当然凡事也有例外，想要了解更多的元素tag的知识，请点击[这里](https://developer.apple.com/library/ios/documentation/ToolsLanguages/Reference/UIAElementClassReference/index.html#//apple_ref/doc/uid/TP40009903)。
+### 借助Appium Inspector来帮助定位 ###
+从上面我们可以看出，我们每次去定位一个页面的元素的时候，都需要去打印一次elementTree，这样是很麻烦的，那么我们就可以借助Appium的inspector来定位，但是，要使用appium的inspector来定位真机上的元素就有一些注意事项了：
+
+- 安装appium要用client端来安装才会有inspector。
+- appium是不带ideviceInstaller的，当我们试图启动inspector的时候，会看到“could not initialize ideviceInstaller”这个异常，这时候我们需要去手动安装这个组件。怎么安装呢，最简单的方法是用homebrew，直接一句命令：brew install ideviceinstaller就完成了，至于怎么安装homebrew，请参见[这里](http://brew.sh/index_zh-cn.html)。
+- 处理了“could not initialize ideviceInstaller”这个异常以后，还有可能会遇上“Instruments exited with code 253”这个异常。那么怎么解决呢，很简单，先把真机和instruments连起来。
+- Inspector抓出来的元素路径是不能在UIA里面直接使用的，因为UIA里面的index是比inspector抓出来的index多1的，所以当我们在使用Inspector抓出来的元素的时候，我们要在他的index的基础上加一，这样在UIA里面才是正确的。
+
+另外，在较新的版本的appium里，inspector的元素高亮的功能被移除了，所以元素定位其实也没那么方便了。
 
 UIA的API解析
 -----------
@@ -193,3 +202,5 @@ dragFromToForDuration的最后一个参数为持续时间，而flickFromTo则没
 ###查看一个元素的name是不是某个字段###
 要查看一个元素的name属性匹配了特定字符串，可以使用withName()这个方法，里面带参数name。
 
+###输入文本###
+要输入文本，实质上是修改了textField或者secureTextFiled这些元素的value值，所以如果我们要输入文本的话，就可以使用setValue()这个方法。
